@@ -40,7 +40,7 @@ ln -sf $RUSTUP_HOME $HOME/.rustup
 ln -sf $CARGO_HOME $HOME/.cargo
 
 # Add Cargo and Rust binaries to the machine path
-echo "PATH=/home/vsts/.cargo/bin:$PATH" | tee -a /etc/environment
+echo "PATH=${CARGO_HOME}/bin:$PATH" | tee -a /etc/environment
 
 # Document what was added to the image
 echo "Lastly, document what was added to the metadata file"
