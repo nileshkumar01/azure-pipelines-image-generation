@@ -4,10 +4,6 @@
 ##  Desc:  Verify that Rust is on the path and output version information.
 ################################################################################
 
-# Rust path
-$CARGO_HOME="C:\Rust\.cargo"
-$env:Path = "$CARGO_HOME\bin;$env:Path"
-
 if (Get-Command -Name 'rustc')
 {
     $RustcVersion = rustc --version
