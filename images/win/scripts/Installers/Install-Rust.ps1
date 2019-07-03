@@ -34,4 +34,4 @@ New-Item -Path $env:USERPROFILE\.cargo -Value $env:CARGO_HOME -ItemType Junction
 New-Item -Path $env:USERPROFILE\.rustup -Value $env:RUSTUP_HOME -ItemType Junction
 
 # Add Cargo and Rust binaries to the machine path
-Add-MachinePathItem "C:\Users\VssAdministrator\.cargo\bin"
+Add-MachinePathItem "$env:CARGO_HOME\bin"
