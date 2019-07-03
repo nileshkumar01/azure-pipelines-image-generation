@@ -21,7 +21,8 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://win.rustup.rs/x86_64" -OutFile 
 Remove-Item -Path .\rustup-init.exe
 
 # Add Rust binaries to the path
-$env:Path = "$env:CARGO_HOME\bin;$env:Path"
+Add-MachinePathItem "$env:CARGO_HOME\bin"
+$env:Path = Get-MachinePath
 
 # Install common tools
 rustup component add rustfmt
@@ -33,5 +34,3 @@ cargo install cbindgen
 New-Item -Path $env:USERPROFILE\.cargo -Value $env:CARGO_HOME -ItemType Junction
 New-Item -Path $env:USERPROFILE\.rustup -Value $env:RUSTUP_HOME -ItemType Junction
 
-# Add Cargo and Rust binaries to the machine path
-Add-MachinePathItem "$env:CARGO_HOME\bin"
