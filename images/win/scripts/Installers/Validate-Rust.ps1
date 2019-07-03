@@ -4,6 +4,10 @@
 ##  Desc:  Verify that Rust is on the path and output version information.
 ################################################################################
 
+# Rust path
+$CARGO_HOME="C:\Rust\.cargo"
+$env:Path = "$CARGO_HOME\bin;$env:Path"
+
 if (Get-Command -Name 'rustc')
 {
     $RustcVersion = rustc --version
@@ -11,7 +15,7 @@ if (Get-Command -Name 'rustc')
 }
 else
 {
-     Write-Host "rustc is not on the path"
+    Write-Host "rustc is not on the path"
     exit 1
 }
 
@@ -26,8 +30,6 @@ $Description = @"
 _Location:_ $RustPath
 _Environment:_
 * PATH: contains the location of rustc.exe
-* RUSTUP_HOME: contains the location of rustup
-* CARGO_HOME: contains the location of cargo
 "@
 
 Add-SoftwareDetailsToMarkdown -SoftwareName $SoftwareName -DescriptionMarkdown $Description

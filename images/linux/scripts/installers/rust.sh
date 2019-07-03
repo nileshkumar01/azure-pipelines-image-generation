@@ -10,15 +10,10 @@ source $HELPER_SCRIPTS/document.sh
 
 set -e
 
-export RUSTUP_HOME=/usr/local/rustup
-export CARGO_HOME=/usr/local/cargo
+export RUSTUP_HOME=/usr/share/.rustup
+export CARGO_HOME=/usr/share/.cargo
 
 curl https://sh.rustup.rs -sSf | sh -s -- -y
-
-echo "RUSTUP_HOME=$RUSTUP_HOME" | tee -a /etc/environment
-echo "CARGO_HOME=$CARGO_HOME" | tee -a /etc/environment
-echo "PATH=$CARGO_HOME/bin:$PATH" | tee -a /etc/environment
-
 source $CARGO_HOME/env
 
 # Install common tools
@@ -27,10 +22,11 @@ rustup component add clippy
 cargo install bindgen
 cargo install cbindgen
 
-chmod -R 0777 $RUSTUP_HOME
-chmod -R 0777 $CARGO_HOME
-
 echo "Test installation of the Rust toochain"
+
+# Permissions
+chmod -R 777 $RUSTUP_HOME
+chmod -R 777 $CARGO_HOME
 
 for cmd in rustup rustc rustdoc cargo rustfmt cargo-clippy bindgen cbindgen; do
     if ! command -v $cmd --version; then
@@ -39,10 +35,17 @@ for cmd in rustup rustc rustdoc cargo rustfmt cargo-clippy bindgen cbindgen; do
     fi
 done
 
+# Symlinks
+ln -sf $RUSTUP_HOME $HOME/.rustup
+ln -sf $CARGO_HOME $HOME/.cargo
+
+# Add Cargo and Rust binaries to the machine path
+echo "PATH=/home/vsts/.cargo/bin:$PATH" | tee -a /etc/environment
+
 # Document what was added to the image
 echo "Lastly, document what was added to the metadata file"
 DocumentInstalledItem "rustup ($(rustup --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "Rust ($(rustc --version 2>&1 | cut -d ' ' -f 2))"
+DocumentInstalledItem "rust ($(rustc --version 2>&1 | cut -d ' ' -f 2))"
 DocumentInstalledItem "cargo ($(cargo --version 2>&1 | cut -d ' ' -f 2))"
 DocumentInstalledItem "rustfmt ($(rustfmt --version 2>&1 | cut -d ' ' -f 2))"
 DocumentInstalledItem "clippy ($(cargo-clippy --version 2>&1 | cut -d ' ' -f 2))"
