@@ -34,3 +34,26 @@ cargo install cbindgen
 New-Item -Path $env:USERPROFILE\.cargo -Value $env:CARGO_HOME -ItemType Junction
 New-Item -Path $env:USERPROFILE\.rustup -Value $env:RUSTUP_HOME -ItemType Junction
 
+# Run script at startup for all users
+$cmdRustSymScript = @"
+@echo off
+
+if exist $env:CARGO_HOME (
+    if not exist %USERPROFILE%\.cargo (
+        mklink /J %USERPROFILE%\.cargo $env:CARGO_HOME
+    )
+)
+
+if exist $env:RUSTUP_HOME (
+    if not exist %USERPROFILE%\.rustup (
+        mklink /J %USERPROFILE%\.rustup $env:RUSTUP_HOME
+    )
+)
+"@
+
+$cmdPath = "$env:ALLUSERSPROFILE\Microsoft\Windows\Start Menu\Programs\Startup\rustsym.bat"
+# Store the script at ALLUSERPROFILE
+$cmdRustSymScript | Out-File -Encoding ascii -FilePath $cmdPath
+
+# Update registry to Run
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "RUSTSYM" -Value $cmdPath
