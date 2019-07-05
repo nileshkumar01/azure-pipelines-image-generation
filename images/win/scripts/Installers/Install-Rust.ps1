@@ -30,10 +30,6 @@ rustup component add clippy
 cargo install bindgen
 cargo install cbindgen
 
-# Junction point
-New-Item -Path $env:USERPROFILE\.cargo -Value $env:CARGO_HOME -ItemType Junction
-New-Item -Path $env:USERPROFILE\.rustup -Value $env:RUSTUP_HOME -ItemType Junction
-
 # Run script at startup for all users
 $cmdRustSymScript = @"
 @echo off
@@ -51,9 +47,8 @@ if exist $env:RUSTUP_HOME (
 )
 "@
 
-$cmdPath = "$env:ALLUSERSPROFILE\Microsoft\Windows\Start Menu\Programs\Startup\rustsym.bat"
-# Store the script at ALLUSERPROFILE
+$cmdPath = "C:\Rust\rustsym.bat"
 $cmdRustSymScript | Out-File -Encoding ascii -FilePath $cmdPath
 
-# Update registry to Run
+# Update Run key to run a script at logon
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "RUSTSYM" -Value $cmdPath
