@@ -4,7 +4,8 @@ enum ImageType {
     VS2017 = 0
     VS2019 = 1
     Ubuntu1604 = 2
-    WinCon = 3
+    WinCon1803 = 3
+    WinCon1903 = 4
 }
 
 Function Get-PackerTemplatePath {
@@ -14,7 +15,7 @@ Function Get-PackerTemplatePath {
         [Parameter(Mandatory = $True)]
         [ImageType] $ImageType
     )
-    
+
     $relativePath = "N/A"
 
     switch ($ImageType) {
@@ -27,8 +28,11 @@ Function Get-PackerTemplatePath {
         ([ImageType]::Ubuntu1604) {
             $relativePath = "\images\linux\ubuntu1604.json"
         }
-        ([ImageType]::WinCon) {
+        ([ImageType]::WinCon1803) {
             $relativePath = "\images\win\WindowsContainer1803-Azure.json"
+        }
+        ([ImageType]::WinCon1903) {
+            $relativePath = "\images\win\WindowsContainer1903-Azure.json"
         }
     }
 
@@ -73,7 +77,7 @@ Function GenerateResourcesAndImage {
         [Parameter(Mandatory = $True)]
         [string] $AzureLocation
     )
-    
+
     $builderScriptPath = Get-PackerTemplatePath -RepositoryRoot $ImageGenerationRepositoryRoot -ImageType $ImageType
     $ServicePrincipalClientSecret = $env:UserName + [System.GUID]::NewGuid().ToString().ToUpper();
     $InstallPassword = $env:UserName + [System.GUID]::NewGuid().ToString().ToUpper();
